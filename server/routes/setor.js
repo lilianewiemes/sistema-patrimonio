@@ -6,11 +6,22 @@ const router = express.Router()
 require('../models/setor')
 const Setor = mongoose.model('setores')
 
-// Get setor
+// Get setores
 router.get('/', (req, res) => {
   Setor.find()
     .then((setores) => {
       res.send({ setores: setores })
+    })
+    .catch((err) => {
+      res.send('Houve um erro ' + err)
+    })
+})
+
+// Get setor
+router.get('/:id', (req, res) => {
+  Setor.findOne({ _id: req.params.id })
+    .then((setor) => {
+      res.send({ setor: setor })
     })
     .catch((err) => {
       res.send('Houve um erro ' + err)
@@ -30,7 +41,7 @@ router.post('/', (req, res) => {
   }
 
   if (erros.length > 0) {
-    res.send('/', { erros: erros })
+    res.send({ erros: erros })
   } else {
     const novoSetor = {
       nome: req.body.nome
@@ -38,12 +49,11 @@ router.post('/', (req, res) => {
 
     new Setor(novoSetor).save()
       .then(function () {
-        console.log('Setor criado com sucesso!')
-        res.redirect('/lista')
+        res.send('Setor criado com sucesso!')
       })
       .catch(function (erro) {
-        console.log('Houve um erro ao salvar o setor, tente novamente.' + erro)
-        res.redirect('/lista')
+        res.send('Houve um erro ao salvar o setor, tente novamente.')
+        console.log(erro)
       })
   }
 })
@@ -53,17 +63,18 @@ router.put('/:id', (req, res) => {
   Setor.findOne({ _id: req.params.id })
     .then((setor) => {
       setor.nome = req.body.nome
-
       setor.save()
         .then(() => {
-          console.log('Setor editado com sucesso')
+          res.send('Setor editado com sucesso')
         })
         .catch((erro) => {
-          console.log('Houve um erro interno ao tentar salvar a edição do setor')
+          res.send('Houve um erro ao tentar salvar a edição do setor')
+          console.log(erro)
         })
     })
     .catch((erro) => {
-      console.log('Houve um erro ao editar o setor' + erro)
+      res.send('Houve um erro ao editar o setor')
+      console.log(erro)
     })
 })
 
@@ -71,10 +82,11 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   Setor.remove({ _id: req.params.id })
     .then(() => {
-      console.log('Setor excluido com sucesso')
+      res.send('Setor excluido com sucesso')
     })
     .catch((erro) => {
-      console.log('Houve um erro ao excluir o setor' + erro)
+      res.send('Houve um erro ao excluir o setor')
+      console.log(erro)
     })
 })
 
