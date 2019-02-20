@@ -13,13 +13,14 @@
     <b-row>
       <b-col>
         <b-table class="text-center" striped hover :items="setores" :fields="fields">
-            <template slot="editar" slot-scope="data">
-              <a href="#" @click="openSetor(data.item._id)">Editar</a>
-            </template>
-            <template slot="excluir" slot-scope="data">
-              <b-button variant="danger" @click="deleteSetor(data.item._id)">Excluir</b-button>
-            </template>
-          </b-table>
+          <template slot="editar" slot-scope="data">
+            <a href="#" @click="openSetor(data.item._id)">Editar</a>
+          </template>
+          <template slot="excluir" slot-scope="data">
+            <b-button variant="danger" @click="deleteSetor(data.item._id)">Excluir</b-button>
+          </template>
+          <h1 v-if="setores == 0">Nenhum setor encontrado</h1>
+        </b-table>
       </b-col>
     </b-row>
 
@@ -29,7 +30,7 @@
         <div>
           <b-form>
             <div class="d-block text-center">
-              <b-form-input v-model="nomeSetor"/>
+              <b-form-input v-model="nomeSetor" required/>
             </div>
           </b-form>
         </div>
@@ -63,6 +64,7 @@ export default {
   },
   created() {
     this.getSetores()
+    console.log(this.setores)
   },
   methods: {
     showModal() {
@@ -111,7 +113,7 @@ export default {
     },
 
     deleteSetor(id) {
-      var resposta = confirm("Você deseja realmente excluir este registro?")
+      var resposta = confirm("Você deseja excluir este registro?")
 
       if (resposta) {
         axios.delete(url + id)
@@ -124,13 +126,3 @@ export default {
   }
 }
 </script>
-
-<style>
-#tabela {
-  margin-top: 85px;
-};
-
-#legenda {
-  
-}
-</style>

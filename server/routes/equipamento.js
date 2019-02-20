@@ -7,14 +7,27 @@ require('../models/equipamento')
 const Equipamento = mongoose.model('equipamentos')
 
 
-// Get equipamento
+// Get equipamentos
 router.get('/', (req, res) => {
   Equipamento.find()
     .then((equipamentos) => {
       res.send({ equipamentos: equipamentos })
     })
     .catch((err) => {
-      res.send('Houve um erro ' + err)
+      res.send('Houve um erro ao buscar os equipamentos')
+      console.log(err)
+    })
+})
+
+// Get equipamento
+router.get('/:id', (req, res) => {
+  Equipamento.findOne({ _id: req.params.id })
+    .then((equipamento) => {
+      res.send({ equipamento: equipamento })
+    })
+    .catch((err) => {
+      res.send('Houve um erro ao buscar o equipamento')
+      console.log(err)
     })
 })
 
@@ -47,7 +60,7 @@ router.post('/', (req, res) => {
   }
 
   if (erros.length > 0) {
-    res.send('/', { erros: erros })
+    res.send({ erros: erros })
   } else {
     const novoEquipamento = {
       numero: req.body.numero,
@@ -60,10 +73,11 @@ router.post('/', (req, res) => {
 
     new Equipamento(novoEquipamento).save()
       .then(function () {
-        console.log('Equipamento criado com sucesso!')
+        res.send('Equipamento criado com sucesso!')
       })
       .catch(function (erro) {
-        console.log('Houve um erro ao salvar o equipamento, tente novamente.' + erro)
+        res.send('Houve um erro ao salvar o equipamento, tente novamente.')
+        console.log(erro)
       })
   }
 })
@@ -81,10 +95,11 @@ router.put('/:id', (req, res) => {
 
       equipamento.save()
         .then(() => {
-          console.log('Equipamento editado com sucesso')
+          res.send('Equipamento editado com sucesso')
         })
         .catch((erro) => {
-          console.log('Houve um erro interno ao tentar salvar a edição do equipamento')
+          res.send('Houve um erro ao tentar salvar a edição do equipamento')
+          console.log(erro)
         })
     })
     .catch((erro) => {

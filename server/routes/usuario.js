@@ -6,16 +6,30 @@ const mongoose = require('mongoose')
 require('../models/usuario')
 const Usuario = mongoose.model('usuarios')
 
-// Get usuario
+// Get usuarios
 router.get('/', (req, res) => {
   Usuario.find()
     .then((usuarios) => {
       res.send({ usuarios: usuarios })
     })
     .catch((err) => {
-      res.send('Houve um erro ' + err)
+      res.send('Houve um erro ao buscar os usuários')
+      console.log(err)
     })
 })
+
+// Get usuario
+router.get('/:id', (req, res) => {
+  Usuario.findOne({ _id: req.params.id })
+    .then((usuario) => {
+      res.send({ usuario: usuario })
+    })
+    .catch((err) => {
+      res.send('Houve um erro ao buscar o usuário')
+      console.log(err)
+    })
+})
+
 
 // Add usuario
 router.post('/', (req, res) => {
@@ -34,7 +48,7 @@ router.post('/', (req, res) => {
   }
 
   if (erros.length > 0) {
-    res.send('/', { erros: erros })
+    res.send({ erros: erros })
   } else {
     const novoUsuario = {
       nome: req.body.nome,
@@ -43,12 +57,11 @@ router.post('/', (req, res) => {
 
     new Usuario(novoUsuario).save()
       .then(function () {
-        console.log('Usuario criado com sucesso!')
-        res.redirect('/lista')
+        res.send('Usuario criado com sucesso!')
       })
       .catch(function (erro) {
-        console.log('Houve um erro ao salvar o usuario, tente novamente.' + erro)
-        res.redirect('/lista')
+        res.send('Houve um erro ao salvar o usuario, tente novamente.')
+        console.log(erro)
       })
   }
 })
@@ -62,14 +75,16 @@ router.put('/:id', (req, res) => {
 
       usuario.save()
         .then(() => {
-          console.log('Usuario editado com sucesso')
+          res.render('Usuario editado com sucesso')
         })
         .catch((erro) => {
-          console.log('Houve um erro interno ao tentar salvar a edição do usuario')
+          res.send('Houve um erro ao tentar salvar a edição do usuário')
+          console.log(erro)
         })
     })
     .catch((erro) => {
-      console.log('Houve um erro ao editar o usuario' + erro)
+      res.send('Houve um erro ao tentar salvar a edição do usuário')
+      console.log(erro)
     })
 })
 
@@ -77,10 +92,11 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   Usuario.remove({ _id: req.params.id })
     .then(() => {
-      console.log('Usuario excluido com sucesso')
+      res.send('Usuario excluido com sucesso')
     })
     .catch((erro) => {
-      console.log('Houve um erro ao excluir o usuario' + erro)
+      res.send('Houve um erro ao excluir o usuário')
+      console.log(erro)
     })
 })
 
