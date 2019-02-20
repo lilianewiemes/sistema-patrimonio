@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const equipamentoSchema = new Schema({
   numero: {
-    type: String,
+    type: Number,
     required: true
   },
   usuario: {

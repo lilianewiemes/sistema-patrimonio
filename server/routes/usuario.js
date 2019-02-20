@@ -9,95 +9,92 @@ const Usuario = mongoose.model('usuarios')
 // Get usuarios
 router.get('/', (req, res) => {
   Usuario.find()
-    .then((usuarios) => {
+  .exec((err, usuarios) => {
+    if (err) {
+      res.send({ error_msg: 'Houve um erro ao buscar os usuarios' })
+    } else if (usuarios) {
       res.send({ usuarios: usuarios })
-    })
-    .catch((err) => {
-      res.send('Houve um erro ao buscar os usuários')
-      console.log(err)
-    })
+    } else {
+      res.send({ error_msg: 'Usuários não encontrados' })
+    }
+  })
 })
 
 // Get usuario
 router.get('/:id', (req, res) => {
-  Usuario.findOne({ _id: req.params.id })
-    .then((usuario) => {
+  Usuario.findById({ _id: req.params.id })
+  .exec((err, usuario) => {
+    if (err) {
+      res.send({ error_msg: 'Houve um erro ao buscar o usuário' })
+    } else if (usuario) {
       res.send({ usuario: usuario })
-    })
-    .catch((err) => {
-      res.send('Houve um erro ao buscar o usuário')
-      console.log(err)
-    })
+    } else {
+      res.send({ error_msg: 'Usuário não encontrado' })
+    }
+  })
 })
 
 
 // Add usuario
 router.post('/', (req, res) => {
-  var erros = []
-
-  if (!req.body.nome) {
-    erros.push({ texto: 'Nome inválido!' })
-  }
-
-  if (!req.body.setor) {
-    erros.push({ texto: 'Setor inválido!' })
-  }
-
-  if (req.body.nome.length < 2) {
-    erros.push({ texto: 'O nome do usuário é muito pequeno' })
-  }
-
-  if (erros.length > 0) {
-    res.send({ erros: erros })
-  } else {
-    const novoUsuario = {
-      nome: req.body.nome,
-      setor: req.body.setor
+  Usuario.findOne({ nome: req.body.nome }).exec((err, usuario) => {
+    if (err) {
+      res.send({ error_msg: 'Houve um erro ao salvar o usuário' })
+    } else if (usuario) {
+      res.send({ error_msg: 'O usuário já existe' })
+    } else {
+      const novoUsuario = {
+        nome: req.body.nome,
+        setor: req.body.setor
+      }
+  
+      new Usuario(novoUsuario).save()
+        .then(function () {
+          res.send('Usuario criado com sucesso!')
+        })
+        .catch(function (erro) {
+          res.send('Houve um erro ao salvar o usuario, tente novamente.')
+          console.log(erro)
+        })
     }
-
-    new Usuario(novoUsuario).save()
-      .then(function () {
-        res.send('Usuario criado com sucesso!')
-      })
-      .catch(function (erro) {
-        res.send('Houve um erro ao salvar o usuario, tente novamente.')
-        console.log(erro)
-      })
-  }
+  })
 })
 
 // Put usuario
 router.put('/:id', (req, res) => {
-  Usuario.findOne({ _id: req.params.id })
-    .then((usuario) => {
-      usuario.nome = req.body.nome,
-      usuario.setor = req.body.setor
+  Usuario.findById({ _id: req.params.id })
+  .exec((err, usuario) => {
+    Usuario.findOne({ nome: req.body.nome })
+      .exec((err, usuarioNome) => {
+        if (err) {
+          res.send({ error_msg: 'Houve um erro ao salvar o usuário' })
+        } else if (usuarioNome) {
+          res.send({ error_msg: 'O usuário já existe' })
+        } else {
+          usuario.nome = req.body.nome
+          usuario.setor = req.body.setor
 
-      usuario.save()
-        .then(() => {
-          res.render('Usuario editado com sucesso')
-        })
-        .catch((erro) => {
-          res.send('Houve um erro ao tentar salvar a edição do usuário')
-          console.log(erro)
-        })
-    })
-    .catch((erro) => {
-      res.send('Houve um erro ao tentar salvar a edição do usuário')
-      console.log(erro)
-    })
+          usuario.save((err) => {
+            if (err) {
+              res.send({ error_msg: 'Houve um erro ao tentar salvar a edição do usuário' })
+            } else {
+              res.send({ success_msg: 'Usuário editado com sucesso' })
+            }
+          })
+        }
+      })
+  })
 })
 
 // Delete usuario
 router.delete('/:id', (req, res) => {
-  Usuario.remove({ _id: req.params.id })
-    .then(() => {
-      res.send('Usuario excluido com sucesso')
-    })
-    .catch((erro) => {
-      res.send('Houve um erro ao excluir o usuário')
-      console.log(erro)
-    })
+  Usuario.deleteOne({ _id: req.params.id }, (err) => {
+    if (err) {
+      res.send({ error_msg: 'Houve um erro ao excluir o usuário' })
+    } else {
+      res.send({ success_msg: 'Usuário excluido com sucesso' })
+    }
+  })
 })
 
 module.exports = router
