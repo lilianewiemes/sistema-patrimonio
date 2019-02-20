@@ -1,7 +1,35 @@
 <template>
-  <b-container class="mt-4">
-    <div class="alert alert-danger" v-if="message.error">{{ message.error }}</div>
-    <div class="alert alert-success" v-if="message.success">{{ message.success }}</div>
+  <b-container class="mt-4" id="body">
+
+    <!-- Alertas -->
+    <template>
+      <div>
+        <b-alert
+        v-if="message.error"
+        :show="dismissCountDown"
+        dismissible
+        variant="danger"
+        @dismissed="dismissCountDown=0"
+        @dismiss-count-down="countDownChanged">
+        {{ message.error }}
+        </b-alert>
+      </div>
+    </template>
+    <template>
+      <div>
+        <b-alert
+        v-if="message.success"
+        :show="dismissCountDown"
+        dismissible
+        variant="success"
+        @dismissed="dismissCountDown=0"
+        @dismiss-count-down="countDownChanged">
+        {{ message.success }}
+        </b-alert>
+      </div>
+    </template>
+
+    <!-- Lista de setores -->
     <b-row>
       <b-col>
         <h3>Lista de Setores</h3>
@@ -19,21 +47,20 @@
           <template slot="excluir" slot-scope="data">
             <b-button variant="danger" @click="deleteSetor(data.item._id)">Excluir</b-button>
           </template>
-          <h1 v-if="setores == 0">Nenhum setor encontrado</h1>
         </b-table>
+        <h3 class="text-center" v-if="setores == 0">Nenhum setor encontrado</h3>
       </b-col>
     </b-row>
 
     <!-- Modal -->
     <div>
       <b-modal ref="modalSetor" title="Setor">
-        <div>
-          <b-form>
-            <div class="d-block text-center">
-              <b-form-input v-model="nomeSetor" required/>
-            </div>
-          </b-form>
-        </div>
+        <b-form>
+          <div class="d-block">
+            <label for="input-default">Nome:</label>
+            <b-form-input v-model="nomeSetor" />
+          </div>
+        </b-form>
         <div slot="modal-footer" class="float-right">
           <b-button class="ml-1" @click="hideModal">Fechar</b-button>
           <b-button class="ml-1" variant="primary" @click="saveSetor">Salvar</b-button>
@@ -59,26 +86,26 @@ export default {
         success: ''
       },
       idSetor: '',
-      nomeSetor: ''
+      nomeSetor: '',
+      dismissSecs: 5,
+      dismissCountDown: 0
     }
   },
   created() {
     this.getSetores()
-    console.log(this.setores)
   },
+
   methods: {
-    showModal() {
-      this.$refs.modalSetor.show()
-    },
-    hideModal() {
-      this.$refs.modalSetor.hide()
-    },
+
+    // Busca os setores
     getSetores() {
       axios.get(url)
       .then(data => {
         this.setores = data.data.setores
       })
     },
+
+    // Busca o setor por ID quando abre o editar setor
     openSetor(id) {
       if (!id) {
         this.idSetor = ''
@@ -94,35 +121,94 @@ export default {
       }
     },
 
+    // Salva o setor ou a edição do setor
     saveSetor() {
       if (this.idSetor) {
-        axios.put(url + this.idSetor, { nome: this.nomeSetor })
+        if (!this.nomeSetor) {
+          alert('Nome é obrigatório!')
+        } else {
+          axios.put(url + this.idSetor, { nome: this.nomeSetor })
           .then(res => {
             this.hideModal()
-            this.message.success = res.data
+            if (res.data.success_msg) {
+              this.message.success = res.data.success_msg
+              this.showAlert()
+            } else {
+              this.message.error = res.data.error_msg
+              this.showAlert()
+            }
             this.getSetores()
           })
+        }
       } else {
-        axios.post(url, { nome: this.nomeSetor })
+        if (!this.nomeSetor) {
+          alert('Nome é obrigatório!')
+        } else {
+          axios.post(url, { nome: this.nomeSetor })
           .then(res => {
             this.hideModal()
-            this.message.success = res.data
+            if (res.data.success_msg) {
+              this.message.success = res.data.success_msg
+              this.showAlert()
+            } else {
+              this.message.error = res.data.error_msg
+              this.showAlert()
+            }
             this.getSetores()
           })
+        }
       }
+      this.message.success = ''
+      this.message.error = ''
     },
 
+    // Deleta o setor
     deleteSetor(id) {
       var resposta = confirm("Você deseja excluir este registro?")
 
       if (resposta) {
         axios.delete(url + id)
         .then(res => {
-          this.message.success = res.data
+          if (res.data.success_msg) {
+              this.message.success = res.data.success_msg
+              this.showAlert()
+            } else {
+              this.message.error = res.data.error_msg
+              this.showAlert()
+            }
           this.getSetores()
+
         })
       }
+      this.message.success = ''
+      this.message.error = ''
+    },
+
+    // Contagem regressiva do alerta
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+
+    // Exibe o alerta
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs
+    },
+
+    // Abre a modal
+    showModal() {
+      this.$refs.modalSetor.show()
+    },
+
+    // Fecha a modal
+    hideModal() {
+      this.$refs.modalSetor.hide()
     }
   }
 }
 </script>
+
+<style>
+#body {
+  padding-top: 80px;
+}
+</style>

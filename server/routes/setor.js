@@ -11,11 +11,11 @@ router.get('/', (req, res) => {
   Setor.find()
     .exec((err, setores) => {
       if (err) {
-        res.send('Houve um erro ao buscar os setores')
+        res.send({ error_msg: 'Houve um erro ao buscar os setores' })
       } else if (setores) {
         res.send({ setores: setores })
       } else {
-        res.send('Setores não encontrados')
+        res.send({ error_msg: 'Setores não encontrados' })
       }
     })
 })
@@ -25,11 +25,11 @@ router.get('/:id', (req, res) => {
   Setor.findById({ _id: req.params.id })
   .exec((err, setor) => {
     if (err) {
-      res.send('Houve um erro ao buscar o setor')
+      res.send({ error_msg: 'Houve um erro ao buscar o setor' })
     } else if (setor) {
       res.send({ setor: setor })
     } else {
-      res.send('Setor não encontrado')
+      res.send({ error_msg: 'Setor não encontrado' })
     }
   })
 })
@@ -38,9 +38,9 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   Setor.findOne({ nome: req.body.nome }).exec((err, setor) => {
     if (err) {
-      res.send('Houve um erro ao salvar o setor')
+      res.send({ error_msg: 'Houve um erro ao salvar o setor' })
     } else if (setor) {
-      res.send('O setor já existe')
+      res.send({ error_msg: 'O setor já existe' })
     } else {
       const novoSetor = {
         nome: req.body.nome
@@ -48,9 +48,9 @@ router.post('/', (req, res) => {
   
       new Setor(novoSetor).save((err) => {
         if (err) {
-          res.send('Houve um erro ao salvar o setor')
+          res.send({ error_msg: 'Houve um erro ao salvar o setor' })
         } else {
-          res.send('Setor criado com sucesso')
+          res.send({ success_msg: 'Setor criado com sucesso' })
         }
       })
     }
@@ -64,16 +64,16 @@ router.put('/:id', (req, res) => {
       Setor.findOne({ nome: req.body.nome })
         .exec((err, setorNome) => {
           if (err) {
-            res.send('Houve um erro ao salvar o setor')
+            res.send({ error_msg: 'Houve um erro ao salvar o setor' })
           } else if (setorNome) {
-            res.send('O setor já existe')
+            res.send({ error_msg: 'O setor já existe' })
           } else {
             setor.nome = req.body.nome
             setor.save((err) => {
               if (err) {
-                res.send('Houve um erro ao tentar salvar a edição do setor')
+                res.send({ error_msg: 'Houve um erro ao tentar salvar a edição do setor' })
               } else {
-                res.send('Setor editado com sucesso')
+                res.send({ success_msg: 'Setor editado com sucesso' })
               }
             })
           }
@@ -85,9 +85,9 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   Setor.deleteOne({ _id: req.params.id }, (err) => {
     if (err) {
-      res.send('Houve um erro ao excluir o setor')
+      res.send({ error_msg: 'Houve um erro ao excluir o setor' })
     } else {
-      res.send('Setor excluido com sucesso')
+      res.send({ success_msg: 'Setor excluido com sucesso' })
     }
   })
 })

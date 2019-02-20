@@ -13,3 +13,9 @@ export default {
   name: 'home'
 }
 </script>
+
+<style>
+.home {
+  padding-top: 80px;
+}
+</style>

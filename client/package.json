@@ -14,7 +14,8 @@
     "vue": "^2.6.6",
     "vue-jquery": "^1.0.6",
     "vue-popperjs": "^2.0.2",
-    "vue-router": "^3.0.2"
+    "vue-router": "^3.0.2",
+    "vuelidate": "^0.7.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
