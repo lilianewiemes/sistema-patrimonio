@@ -19,9 +19,9 @@ const usuario = require('./routes/usuario');
 const setor = require('./routes/setor');
 const equipamento = require('./routes/equipamento');
 
-app.use('/usuario', usuario)
-app.use('/setor', setor)
-app.use('/equipamento', equipamento)
+app.use('/api/usuario', usuario)
+app.use('/api/setor', setor)
+app.use('/api/equipamento', equipamento)
 
 // Public
 if (process.env.NODE_ENV === 'production') {

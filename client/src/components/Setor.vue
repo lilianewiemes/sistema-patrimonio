@@ -73,7 +73,7 @@
 <script>
 import axios from 'axios'
 
-const url = 'setor/'
+const url = 'api/setor/'
 
 export default {
   name: 'setor',
