@@ -3,7 +3,7 @@ const router = express.Router()
 const mongoose = require('mongoose')
 
 // Model
-require('../models/equipamento')
+require('../../models/equipamento')
 const Equipamento = mongoose.model('equipamentos')
 
 

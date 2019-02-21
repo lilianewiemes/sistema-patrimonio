@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const router = express.Router()
 
 // Model
-require('../models/setor')
+require('../../models/setor')
 const Setor = mongoose.model('setores')
 
 // Get setores
