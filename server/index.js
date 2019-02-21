@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const router = express.Router()
 const mongoose = require('mongoose')
 const cors = require('cors')
+const db = require('./config/db')
 
 const app = express()
 
@@ -22,8 +23,17 @@ app.use('/usuario', usuario)
 app.use('/setor', setor)
 app.use('/equipamento', equipamento)
 
+// Public
+if (process.env.NODE_ENV === 'production') {
+  // Static folder
+  app.use(express.static(__dirname + '/public/'))
+
+  // Handle SPA
+  app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'))
+}
+
 // Conexao com o banco
-mongoose.connect('mongodb://localhost/teste-patrimonio')
+mongoose.connect(db.mongoURI)
   .then(() => {
     console.log('Conectado ao mongoDB')
   })
