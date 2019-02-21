@@ -15,9 +15,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // Routes
-const usuario = require('./routes/usuario');
-const setor = require('./routes/setor');
-const equipamento = require('./routes/equipamento');
+const usuario = require('./routes/api/usuario');
+const setor = require('./routes/api/setor');
+const equipamento = require('./routes/api/equipamento');
 
 app.use('/api/usuario', usuario)
 app.use('/api/setor', setor)
