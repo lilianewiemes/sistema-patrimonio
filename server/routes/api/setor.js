@@ -65,8 +65,6 @@ router.put('/:id', (req, res) => {
         .exec((err, setorNome) => {
           if (err) {
             res.send({ error_msg: 'Houve um erro ao salvar o setor' })
-          } else if (setorNome) {
-            res.send({ error_msg: 'O setor já existe' })
           } else {
             setor.nome = req.body.nome
             setor.save((err) => {

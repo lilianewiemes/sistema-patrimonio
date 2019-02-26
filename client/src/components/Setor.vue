@@ -137,7 +137,6 @@ export default {
               this.message.error = res.data.error_msg
               this.showAlert()
             }
-            this.getSetores()
           })
         }
       } else {
@@ -154,12 +153,12 @@ export default {
               this.message.error = res.data.error_msg
               this.showAlert()
             }
-            this.getSetores()
           })
         }
       }
       this.message.success = ''
       this.message.error = ''
+      this.getSetores()
     },
 
     // Deleta o setor
@@ -176,12 +175,11 @@ export default {
               this.message.error = res.data.error_msg
               this.showAlert()
             }
-          this.getSetores()
-
         })
       }
       this.message.success = ''
       this.message.error = ''
+      this.getSetores()
     },
 
     // Contagem regressiva do alerta

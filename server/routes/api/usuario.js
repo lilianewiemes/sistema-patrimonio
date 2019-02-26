@@ -9,6 +9,7 @@ const Usuario = mongoose.model('usuarios')
 // Get usuarios
 router.get('/', (req, res) => {
   Usuario.find()
+  .populate('setor')
   .exec((err, usuarios) => {
     if (err) {
       res.send({ error_msg: 'Houve um erro ao buscar os usuarios' })
@@ -34,7 +35,6 @@ router.get('/:id', (req, res) => {
   })
 })
 
-
 // Add usuario
 router.post('/', (req, res) => {
   Usuario.findOne({ nome: req.body.nome }).exec((err, usuario) => {
@@ -54,7 +54,6 @@ router.post('/', (req, res) => {
         })
         .catch(function (erro) {
           res.send('Houve um erro ao salvar o usuario, tente novamente.')
-          console.log(erro)
         })
     }
   })
@@ -68,8 +67,6 @@ router.put('/:id', (req, res) => {
       .exec((err, usuarioNome) => {
         if (err) {
           res.send({ error_msg: 'Houve um erro ao salvar o usuário' })
-        } else if (usuarioNome) {
-          res.send({ error_msg: 'O usuário já existe' })
         } else {
           usuario.nome = req.body.nome
           usuario.setor = req.body.setor

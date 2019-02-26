@@ -9,7 +9,7 @@
             <b-nav-item href="#"><router-link to="/">Home</router-link></b-nav-item>
             <b-nav-item-dropdown right text="Listar">
               <b-dropdown-item href="#"><router-link to="/equipamento">Equipamento</router-link></b-dropdown-item>
-              <b-dropdown-item href="#"><router-link to="/usuario">Usuario</router-link></b-dropdown-item>
+              <b-dropdown-item href="#"><router-link to="/usuario">Usuário</router-link></b-dropdown-item>
               <b-dropdown-item href="#"><router-link to="/setor">Setor</router-link></b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
