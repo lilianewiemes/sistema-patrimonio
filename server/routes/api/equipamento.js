@@ -10,6 +10,8 @@ const Equipamento = mongoose.model('equipamentos')
 // Get equipamentos
 router.get('/', (req, res) => {
   Equipamento.find()
+  .populate('setor')
+  .populate('usuario')
   .exec((err, equipamentos) => {
     if (err) {
       res.send({ error_msg: 'Houve um erro ao buscar os equipamentos' })
@@ -71,8 +73,6 @@ router.put('/:id', (req, res) => {
       .exec((err, numero) => {
         if (err) {
           res.send({ error_msg: 'Houve um erro ao salvar o equipamento' })
-        } else if (numero) {
-          res.send({ error_msg: 'O equipamento já existe' })
         } else {
           equipamento.numero = req.body.numero,
           equipamento.usuario = req.body.usuario,

@@ -13,7 +13,7 @@ const equipamentoSchema = new Schema({
   },
   setor: {
     type: Schema.Types.ObjectId,
-    ref: 'usuarios',
+    ref: 'setores',
     required: true
   },
   tipo: {
