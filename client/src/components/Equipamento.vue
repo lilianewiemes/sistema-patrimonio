@@ -210,6 +210,8 @@ export default {
       if (this.idEquipamento) {
         if (!this.numero) {
           alert('Número é obrigatório!')
+        } else if (isNaN(this.numero)) {
+          alert('Campo número requer um número!')
         } else if (!this.usuario) {
           alert('Usuário é obrigatório!')
         } else if (!this.setor) {
@@ -236,6 +238,8 @@ export default {
       } else {
         if (!this.numero) {
           alert('Nome é obrigatório!')
+        } else if (isNaN(this.numero)) {
+          alert('Campo número requer um número!')
         } else if (!this.usuario) {
           alert('Usuário é obrigatório!')
         } else if (!this.setor) {
